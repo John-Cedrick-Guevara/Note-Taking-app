@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
+export async function GET(req: Request) {
+
+  const {searchParams} =  new URL(req.url)
+
+  const id  = searchParams.get("userId")
 
   // Validate the user ID
   if (!id) {

@@ -3,15 +3,16 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-const signUp = () => {
+const updateProfile = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVal, setPasswordVal] = useState("");
   const [error, setError] = useState("");
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (password.length < 8) {
@@ -26,24 +27,27 @@ const signUp = () => {
     } else if (password !== passwordVal) {
       setError("Please type the same password");
     } else {
-      await axios.post("/api/userAction/createUser", {
+      axios.post("/api/userAction/editUser", {
         email: email,
+        newEmail: newEmail,
         password: password,
         uname: userName,
       });
 
       setEmail("");
+      setNewEmail("")
       setUserName("");
       setPassword("");
+      setPasswordVal("");
 
-      router.push("/");
+      router.push("/dashboard");
     }
   }
 
   return (
     <form className="p-5 " onSubmit={handleSubmit}>
       <h1 className="text-3xl text-white font-semibold flex flex-col ">
-        Sign Up
+        Edit Credentials
       </h1>
       {error ? (
         <div className="bg-red-400 rounded p-5 m-2">
@@ -64,10 +68,21 @@ const signUp = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
+        <div className="inputField w-full">
+          <label htmlFor="email">Set New Email:</label>
+          <input
+            name="email"
+            type="text"
+            placeholder="Email"
+            className="input input-bordered input-secondary w-full "
+            value={newEmail}
+            onChange={(e) => setNewEmail(e.target.value)}
+          />
+        </div>
 
         {/* password field */}
         <div className="inputField w-full">
-          <label htmlFor="psd">Password:</label>
+          <label htmlFor="psd">Set New Password:</label>
 
           <input
             name="psd"
@@ -93,7 +108,7 @@ const signUp = () => {
         </div>
 
         <div className="inputField w-full">
-          <label htmlFor="username">Set your username:</label>
+          <label htmlFor="username">Set your new username:</label>
 
           <input
             name="userName"
@@ -104,10 +119,10 @@ const signUp = () => {
             onChange={(e) => setUserName(e.target.value)}
           />
         </div>
-        <button className="btn btn-outline btn-info w-fit">Submit</button>
+        <button className="btn btn-outline btn-info w-fit">Save</button>
       </section>
     </form>
   );
 };
 
-export default signUp;
+export default updateProfile;

@@ -12,20 +12,20 @@ interface note {
   userId: string;
 }
 
-const notePage = ({ params }: { params: { noteId: string } }) => {
+const notePage = ({ params }: { params: { noteID: string } }) => {
   const router = useRouter();
   const [noteData, setNoteData] = useState<note | null>(null);
 
   useEffect(() => {
     async function fetchNote() {
       const dataNote = await axios.get(
-        `/api/noteAction/fetchNote/${params.noteId}`
+        `/api/noteAction/fetchNote`, {params : {userId : params.noteID}}
       );
 
       return setNoteData(dataNote.data.data);
     }
     fetchNote();
-  }, [params.noteId]);
+  }, [params.noteID]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

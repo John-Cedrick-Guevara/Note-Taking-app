@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
 
     if (!token) {
         console.log('No token found, redirecting to login');
-        return NextResponse.redirect(new URL("/login", req.url));
+        return NextResponse.redirect(new URL("/logIn", req.url));
     }
 
     try {

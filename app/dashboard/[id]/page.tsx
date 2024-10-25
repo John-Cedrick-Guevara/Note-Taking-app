@@ -20,13 +20,15 @@ const dashboardPage = ({ params }: { params: { id: string } }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null); // State for error handling
   const router = useRouter();
-
+  const [showmessage, setShowMessage] = useState(false);
   useEffect(() => {
     // Fetch user data based on params.id
 
-     const fetchUser = async () => {
+    const fetchUser = async () => {
       try {
-        const res = await axios.get(`/api/users/${params.id}`, {data : {userId : params.id}});
+        const res = await axios.get(`/api/users`, {
+          params: { userId: params.id },
+        });
         setNotes(res.data.user);
       } catch (error) {
         console.error(error);
@@ -37,26 +39,32 @@ const dashboardPage = ({ params }: { params: { id: string } }) => {
     };
 
     fetchUser();
-  }, []);
+  }, [showmessage]);
 
   function handleDelete(id: number) {
     axios
-      .delete(`/api/noteAction/deleteNote/${id}`, {
-        params: { userId: params.id },
+      .delete(`/api/noteAction/deleteNote`, {
+        params: { id: id },
       })
+
       .then((response) => {
         console.log("Note deleted successfully", response.data);
-        
+        setShowMessage(true);
+
+        const timer = setTimeout(() => {
+          setShowMessage(false);
+        }, 2000);
+
+        return () => clearTimeout(timer);
       })
       .catch((error) => {
         console.error("Error deleting the note", error);
       });
-
-    console.log(id);
   }
 
   return (
     <main className="p-10 flex flex-col gap-4 items-center justify-center">
+      {showmessage && <h1>Note Deleted</h1>}
       {notes?.map((note, key) => (
         <div
           key={key}

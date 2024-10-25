@@ -1,9 +1,25 @@
 "use client";
+import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { CgProfile } from "react-icons/cg";
 
 const Nav = () => {
+
+  const router = useRouter()
+
+
+  function handleLogOut() {
+    try  {
+      axios.post("/api/logOut")
+      router.push("/")
+    } catch (error) {
+      console.log("error : ", error);
+    }
+  }
+
+
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1 ">
@@ -31,17 +47,12 @@ const Nav = () => {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
-            <li>
-              <a className="justify-between">
-                Profile
-                <span className="badge">New</span>
-              </a>
-            </li>
-            <li>
-              <a>Settings</a>
-            </li>
-            <li>
-              <a>Logout</a>
+            <Link href={"/updateProfile"}>
+              <span className="justify-between">Update Profile</span>
+            </Link>
+
+            <li onClick={handleLogOut}>
+              <span>Logout</span>
             </li>
           </ul>
         </div>
