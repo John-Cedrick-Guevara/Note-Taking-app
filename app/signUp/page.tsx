@@ -34,6 +34,7 @@ const signUp = () => {
 
       setEmail("");
       setUserName("");
+      setPasswordVal("");
       setPassword("");
 
       router.push("/");

@@ -2,6 +2,7 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { useData } from "../DataProvider";
 
 interface user {
   id: number;
@@ -15,24 +16,25 @@ const signUp = () => {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const { setUserId } = useData();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const data = {
+
+    const res = await axios.post("/api/auth", {
       email: formData.get("email"),
       password: formData.get("psd"),
-    };
-
-    const res = await axios.post("/api/auth", data);
-    console.log(res.data.id);
+    });
 
     if (!res.data.message) {
       return;
     }
 
-    router.push(`/dashboard/${res.data.id}` );
+    setUserId(res.data.id);
+
+    router.push(`/dashboard`);
   }
 
   return (

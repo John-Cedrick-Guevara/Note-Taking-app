@@ -1,9 +1,7 @@
 import prisma from "@/lib/db";
-import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
-import { redirect } from "next/navigation";
 
 const secret = process.env.JWT_SECRET || "your-secret-key";
 

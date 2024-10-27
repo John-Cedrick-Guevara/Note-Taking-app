@@ -23,7 +23,7 @@ const notePage = ({ params }: { params: { noteID: string } }) => {
       );
 
       return setNoteData(dataNote.data.data);
-    }
+    } 
     fetchNote();
   }, [params.noteID]);
 
@@ -36,7 +36,7 @@ const notePage = ({ params }: { params: { noteID: string } }) => {
       noteText: noteData?.noteText,
     });
 
-    router.push(`/dashboard/${noteData?.userId}`);
+    router.push(`/dashboard`);
   }
 
   return (

@@ -1,10 +1,11 @@
 "use client";
+import { useData } from "@/app/DataProvider";
 import prisma from "@/lib/db";
 import axios from "axios";
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IoAddCircleSharp } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 
@@ -17,29 +18,32 @@ interface note {
 
 const dashboardPage = ({ params }: { params: { id: string } }) => {
   const [notes, setNotes] = useState<note[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null); // State for error handling
-  const router = useRouter();
   const [showmessage, setShowMessage] = useState(false);
+  const { userId } = useData();
+
+
   useEffect(() => {
     // Fetch user data based on params.id
 
     const fetchUser = async () => {
+
+      if (!userId) return;
+
       try {
         const res = await axios.get(`/api/users`, {
-          params: { userId: params.id },
+          params: { userId: userId },
         });
         setNotes(res.data.user);
       } catch (error) {
         console.error(error);
         setError("Failed to fetch user data."); // Update error state
       } finally {
-        setIsLoading(false); // Set loading to false in both success and error cases
       }
     };
 
     fetchUser();
-  }, [showmessage]);
+  }, [showmessage, userId]);
 
   function handleDelete(id: number) {
     axios
@@ -70,7 +74,7 @@ const dashboardPage = ({ params }: { params: { id: string } }) => {
           key={key}
           className="cursor-pointer border rounded-md p-5 w-full flex items-center justify-between"
         >
-          <Link href={`/dashboard/${note.userId}/${note.noteId}}`}>
+          <Link href={`/dashboard/${note.noteId}}`}>
             <h1 className=" text-2xl font-semibold">{note.title}</h1>
             <p>{note.noteText}</p>
           </Link>
@@ -80,7 +84,7 @@ const dashboardPage = ({ params }: { params: { id: string } }) => {
         </div>
       ))}
 
-      <Link href={`/dashboard/${params.id}/createNote`}>
+      <Link href={`/dashboard/createNote`}>
         <IoAddCircleSharp
           className="cursor-pointer fixed bottom-10 right-10"
           size={60}

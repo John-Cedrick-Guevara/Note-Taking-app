@@ -4,24 +4,24 @@ import SimpleMDE, { SimpleMdeReact } from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useData } from "@/app/DataProvider";
 
-const createNote = ({ params }: { params: { id: string } }) => {
+const createNote = () => {
   const [noteText, setNoteText] = useState("");
-  const router = useRouter()
+  const { userId } = useData();
+  const router = useRouter();
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
 
-    const data = {
+    axios.post("/api/noteAction/createNote", {
       title: formData.get("title"),
       noteText: noteText,
-      id: params.id,
-    };
-
-    axios.post("/api/noteAction/createNote", data);
-    router.push(`/dashboard/${params.id}`)
+      id: userId,
+    });
+    router.push(`/dashboard`);
   }
 
   return (
