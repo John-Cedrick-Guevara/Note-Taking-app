@@ -8,7 +8,6 @@ const layout = ({
 }>) => {
   return (
     <main>
-      <Nav />
       {children}
     </main>
   );

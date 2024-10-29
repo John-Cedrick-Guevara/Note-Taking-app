@@ -1,9 +1,8 @@
 "use client";
-import prisma from "@/lib/db";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import SimpleMDE, { SimpleMdeReact } from "react-simplemde-editor";
+import SimpleMDE from "react-simplemde-editor";
 
 interface note {
   noteId: number;
@@ -40,8 +39,8 @@ const notePage = ({ params }: { params: { noteID: string } }) => {
   }
 
   return (
-    <div>
-      <form action="" onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <div className="p-10 ">
+      <form action="" onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-4xl mx-auto">
         {/* title field */}
         <input
           type="text"

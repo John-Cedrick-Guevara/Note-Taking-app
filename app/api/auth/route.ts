@@ -22,17 +22,14 @@ export async function POST(req: Request) {
 
     // Check if user exists
     if (!user) {
-      return NextResponse.json({ message: "Invalid email" }, { status: 401 });
+      return NextResponse.json({ message: "Invalid email" });
     }
 
     // Validate password
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return NextResponse.json(
-        { message: "Invalid password" },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: "Invalid password" });
     }
 
     // Create JWT token

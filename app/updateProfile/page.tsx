@@ -45,7 +45,7 @@ const updateProfile = () => {
   }
 
   return (
-    <form className="p-5 " onSubmit={handleSubmit}>
+    <form className="p-5 max-w-2xl mx-auto" onSubmit={handleSubmit}>
       <h1 className="text-3xl text-white font-semibold flex flex-col ">
         Edit Credentials
       </h1>

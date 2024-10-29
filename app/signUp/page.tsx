@@ -1,4 +1,5 @@
 "use client";
+import Error from "@/Components/Error";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -13,16 +14,15 @@ const signUp = () => {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    if (password.length < 8) {
-      setError("Password must be 8 characters.");
-    } else if (
+    if (
       password === "" ||
       userName === "" ||
       passwordVal === "" ||
       userName === ""
     ) {
       setError("All should be answered.");
+    } else if (password.length < 8) {
+      setError("Password must be 8 characters.");
     } else if (password !== passwordVal) {
       setError("Please type the same password");
     } else {
@@ -42,15 +42,11 @@ const signUp = () => {
   }
 
   return (
-    <form className="p-5 " onSubmit={handleSubmit}>
+    <form className="p-5 max-w-2xl mx-auto" onSubmit={handleSubmit}>
       <h1 className="text-3xl text-white font-semibold flex flex-col ">
         Sign Up
       </h1>
-      {error ? (
-        <div className="bg-red-400 rounded p-5 m-2">
-          <h1 className="text-white">{error}</h1>
-        </div>
-      ) : null}
+      <Error message={error} />
       {/* email field */}
 
       <section className="mt-20 flex flex-col items-center justify-center mx-auto gap-5">

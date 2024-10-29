@@ -3,6 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useData } from "../DataProvider";
+import Error from "@/Components/Error";
 
 interface user {
   id: number;
@@ -16,6 +17,7 @@ const signUp = () => {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const { setUserId } = useData();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -32,17 +34,21 @@ const signUp = () => {
       return;
     }
 
+    setError(res.data.message);
+
     setUserId(res.data.id);
 
     router.push(`/dashboard`);
   }
 
   return (
-    <form className="p-5 " onSubmit={handleSubmit}>
+    <form className="p-5 max-w-2xl mx-auto" onSubmit={handleSubmit}>
       {/* email field */}
       <h1 className="text-3xl text-white font-semibold flex flex-col ">
         Log In
       </h1>
+
+      <Error message={error} />
 
       <section className="mt-20 flex flex-col items-center justify-center mx-auto gap-5">
         <div className="inputField w-full">

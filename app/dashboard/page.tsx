@@ -1,11 +1,10 @@
 "use client";
 import { useData } from "@/app/DataProvider";
-import prisma from "@/lib/db";
+import Nav from "@/Components/Nav";
 import axios from "axios";
-import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoAddCircleSharp } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 
@@ -16,18 +15,16 @@ interface note {
   userId: string;
 }
 
-const dashboardPage = ({ params }: { params: { id: string } }) => {
+const dashboardPage = () => {
   const [notes, setNotes] = useState<note[]>([]);
-  const [error, setError] = useState<string | null>(null); // State for error handling
   const [showmessage, setShowMessage] = useState(false);
+  const [search, setSearch] = useState("");
   const { userId } = useData();
-
 
   useEffect(() => {
     // Fetch user data based on params.id
 
     const fetchUser = async () => {
-
       if (!userId) return;
 
       try {
@@ -37,8 +34,7 @@ const dashboardPage = ({ params }: { params: { id: string } }) => {
         setNotes(res.data.user);
       } catch (error) {
         console.error(error);
-        setError("Failed to fetch user data."); // Update error state
-      } finally {
+       
       }
     };
 
@@ -66,30 +62,37 @@ const dashboardPage = ({ params }: { params: { id: string } }) => {
       });
   }
 
-  return (
-    <main className="p-10 flex flex-col gap-4 items-center justify-center">
-      {showmessage && <h1>Note Deleted</h1>}
-      {notes?.map((note, key) => (
-        <div
-          key={key}
-          className="cursor-pointer border rounded-md p-5 w-full flex items-center justify-between"
-        >
-          <Link href={`/dashboard/${note.noteId}}`}>
-            <h1 className=" text-2xl font-semibold">{note.title}</h1>
-            <p>{note.noteText}</p>
-          </Link>
-          <div>
-            <MdDelete size={30} onClick={() => handleDelete(note.noteId)} />
-          </div>
-        </div>
-      ))}
+  console.log(search);
 
-      <Link href={`/dashboard/createNote`}>
-        <IoAddCircleSharp
-          className="cursor-pointer fixed bottom-10 right-10"
-          size={60}
-        />
-      </Link>
+  return (
+    <main className=" flex flex-col gap-4 items-center justify-center">
+      <Nav search={search} setSearch={setSearch} />
+
+      {showmessage && <h1>Note Deleted</h1>}
+      <section className="flex flex-wrap gap-3 w-full mt-10 p-10">
+        {notes
+          ?.filter((item) => (item.title.includes(search) ? item : null))
+          .map((note, key) => (
+            <div
+              key={key}
+              className="cursor-pointer border rounded-md p-3 w-full  md:max-w-sm mx-auto"
+            >
+              <Link href={`/dashboard/${note.noteId}}`}>
+                <h1 className=" text-2xl font-semibold">{note.title}</h1>
+                <p>{note.noteText}</p>
+              </Link>
+              <div className="block w-fit ml-auto">
+                <MdDelete size={30} onClick={() => handleDelete(note.noteId)} />
+              </div>
+            </div>
+          ))}
+
+        <div className="absolute bottom-10 right-10">
+          <Link href={`/dashboard/createNote`}>
+            <IoAddCircleSharp size={50} />
+          </Link>
+        </div>
+      </section>
     </main>
   );
 };
